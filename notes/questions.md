@@ -1,15 +1,3 @@
----
-
-1. Jakie techniki fine-tuningu modeli językowych najlepiej dostosowują LLM do analizy logów Kubernetes?
-
-Aby dostosować LLMy do analizy logów Kubernetes, najlepiej będzie zastosować takie techniki jak:
-
-- Parameter-Efficient Fine-Tuning, który pozwala na dostosowanie modelu przy użyciu ograniczonych zasobów obliczeniowych i mniejszych zbiorów danych (https://learn.microsoft.com/en-us/azure/aks/concepts-fine-tune-language-models)
-
-- Low-Rank Adaptation (LoRA) - przez zmniejsza zużycie pamięci i mocy obliczeniowej podczas fine-tuningu jest korzystne przy pracy z dużymi modelami na specjalistycznych danych, np. logach systemowych.
-
----
-
 1. Jakie techniki fine-tuningu modeli językowych najlepiej dostosowują LLM do analizy logów Kubernetes?
 
 Aby dostosować LLMy do analizy logów Kubernetes, najlepiej będzie zastosować takie techniki jak:
