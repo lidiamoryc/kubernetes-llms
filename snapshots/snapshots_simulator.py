@@ -29,6 +29,7 @@ nodes = ["node-1", "node-2"]
 
 output_file = "k8s_fake_snapshots.json"
 
+
 # simulation
 def generate_snapshot():
     timestamp = datetime.utcnow().isoformat() + "Z"

@@ -37,5 +37,31 @@
     "events": "LAST SEEN   TYPE      REASON     OBJECT             MESSAGE\n1m          Warning   BackOff    pod/api-server     Back-off restarting failed container\n2m          Normal    Pulled     pod/api-server     Successfully pulled image \"api:v1.2\"\n",
     "top_pods": "NAMESPACE     NAME              CPU(cores)   MEMORY(bytes)\ndefault       api-server-pod    120m         890Mi\ndefault       redis-cache        30m         110Mi\n",
     "node": "Name: node-1\nMemoryPressure: False\nDiskPressure: False\nConditions:\n  Ready: True\n  MemoryPressure: False\nTaints: <none>\n"
+  },
+  {
+    "timestamp": "2025-03-28T11:12:25.886607Z",
+    "pods": [
+      "api-server-pod,1/1,Running,1,93m,10.1.4.45,node-2",
+      "nginx-deployment-xyz,1/1,Running,3,87m,10.1.3.55,node-1",
+      "redis-cache-abc,1/1,Running,3,116m,10.1.1.81,node-2"
+    ],
+    "describe": "Name: api-server-pod\nNamespace: default\nNode: node-1\nStatus: Running\nIP: 10.1.2.34\nRestart Count: 0\nEvents:\n  Type     Reason     Age   From     Message\n  ----     ------     ---   ----     -------\n  Normal   Pulled     1m    kubelet  Container image pulled\n  Warning  BackOff    2m    kubelet  Back-off restarting failed container\n",
+    "logs": "[INFO] Successfully pulled image 'nginx:latest'\n[INFO] Successfully pulled image 'nginx:latest'\n[WARNING] CPU pressure detected on node\n[WARNING] CPU pressure detected on node\n[ERROR] Image pull failed: connection timeout",
+    "events": "LAST SEEN   TYPE      REASON     OBJECT             MESSAGE\n1m          Warning   BackOff    pod/api-server     Back-off restarting failed container\n2m          Normal    Pulled     pod/api-server     Successfully pulled image \"api:v1.2\"\n",
+    "top_pods": "NAMESPACE     NAME              CPU(cores)   MEMORY(bytes)\ndefault       api-server-pod    120m         890Mi\ndefault       redis-cache        30m         110Mi\n",
+    "node": "Name: node-1\nMemoryPressure: False\nDiskPressure: False\nConditions:\n  Ready: True\n  MemoryPressure: False\nTaints: <none>\n"
+  },
+  {
+    "timestamp": "2025-03-28T11:12:55.891335Z",
+    "pods": [
+      "api-server-pod,1/1,Running,1,52m,10.1.4.247,node-2",
+      "nginx-deployment-xyz,1/1,Running,3,62m,10.1.4.144,node-1",
+      "redis-cache-abc,1/1,Running,2,8m,10.1.4.177,node-2"
+    ],
+    "describe": "Name: api-server-pod\nNamespace: default\nNode: node-1\nStatus: Running\nIP: 10.1.2.34\nRestart Count: 0\nEvents:\n  Type     Reason     Age   From     Message\n  ----     ------     ---   ----     -------\n  Normal   Pulled     1m    kubelet  Container image pulled\n  Warning  BackOff    2m    kubelet  Back-off restarting failed container\n",
+    "logs": "[INFO] Successfully pulled image 'nginx:latest'\n[WARNING] Pod eviction triggered due to memory usage\n[WARNING] CPU pressure detected on node\n[ERROR] Pod crashloop backoff\n[ERROR] Pod crashloop backoff",
+    "events": "LAST SEEN   TYPE      REASON     OBJECT             MESSAGE\n1m          Warning   BackOff    pod/api-server     Back-off restarting failed container\n2m          Normal    Pulled     pod/api-server     Successfully pulled image \"api:v1.2\"\n",
+    "top_pods": "NAMESPACE     NAME              CPU(cores)   MEMORY(bytes)\ndefault       api-server-pod    120m         890Mi\ndefault       redis-cache        30m         110Mi\n",
+    "node": "Name: node-1\nMemoryPressure: False\nDiskPressure: False\nConditions:\n  Ready: True\n  MemoryPressure: False\nTaints: <none>\n"
   }
 ]
