@@ -1,0 +1,41 @@
+[
+  {
+    "timestamp": "2025-03-28T09:37:38.102665Z",
+    "pods": [
+      "api-server-pod,1/1,Running,3,80m,10.1.2.167,node-2",
+      "nginx-deployment-xyz,1/1,Running,2,54m,10.1.4.167,node-2",
+      "redis-cache-abc,1/1,Running,0,106m,10.1.2.119,node-2"
+    ],
+    "describe": "Name: api-server-pod\nNamespace: default\nNode: node-1\nStatus: Running\nIP: 10.1.2.34\nRestart Count: 4\nEvents:\n  Type     Reason     Age   From     Message\n  ----     ------     ---   ----     -------\n  Normal   Pulled     1m    kubelet  Container image pulled\n  Warning  BackOff    2m    kubelet  Back-off restarting failed container\n",
+    "logs": "[INFO] Node registered with the cluster\n[WARNING] Container took too long to start\n[WARNING] Container took too long to start\n[ERROR] Failed to start container runtime\n[ERROR] Image pull failed: connection timeout",
+    "events": "LAST SEEN   TYPE      REASON     OBJECT             MESSAGE\n1m          Warning   BackOff    pod/api-server     Back-off restarting failed container\n2m          Normal    Pulled     pod/api-server     Successfully pulled image \"api:v1.2\"\n",
+    "top_pods": "NAMESPACE     NAME              CPU(cores)   MEMORY(bytes)\ndefault       api-server-pod    120m         890Mi\ndefault       redis-cache        30m         110Mi\n",
+    "node": "Name: node-1\nMemoryPressure: False\nDiskPressure: False\nConditions:\n  Ready: True\n  MemoryPressure: False\nTaints: <none>\n"
+  },
+  {
+    "timestamp": "2025-03-28T09:38:08.106732Z",
+    "pods": [
+      "api-server-pod,1/1,Running,3,43m,10.1.1.244,node-1",
+      "nginx-deployment-xyz,1/1,Running,1,78m,10.1.1.240,node-2",
+      "redis-cache-abc,1/1,Running,2,15m,10.1.4.229,node-2"
+    ],
+    "describe": "Name: api-server-pod\nNamespace: default\nNode: node-1\nStatus: Running\nIP: 10.1.2.34\nRestart Count: 5\nEvents:\n  Type     Reason     Age   From     Message\n  ----     ------     ---   ----     -------\n  Normal   Pulled     1m    kubelet  Container image pulled\n  Warning  BackOff    2m    kubelet  Back-off restarting failed container\n",
+    "logs": "[INFO] Started container successfully\n[WARNING] CPU pressure detected on node\n[ERROR] Image pull failed: connection timeout\n[ERROR] Image pull failed: connection timeout",
+    "events": "LAST SEEN   TYPE      REASON     OBJECT             MESSAGE\n1m          Warning   BackOff    pod/api-server     Back-off restarting failed container\n2m          Normal    Pulled     pod/api-server     Successfully pulled image \"api:v1.2\"\n",
+    "top_pods": "NAMESPACE     NAME              CPU(cores)   MEMORY(bytes)\ndefault       api-server-pod    120m         890Mi\ndefault       redis-cache        30m         110Mi\n",
+    "node": "Name: node-1\nMemoryPressure: False\nDiskPressure: False\nConditions:\n  Ready: True\n  MemoryPressure: False\nTaints: <none>\n"
+  },
+  {
+    "timestamp": "2025-03-28T09:41:43.906886Z",
+    "pods": [
+      "api-server-pod,1/1,Running,0,46m,10.1.3.162,node-2",
+      "nginx-deployment-xyz,1/1,Running,3,20m,10.1.1.17,node-2",
+      "redis-cache-abc,1/1,Running,2,98m,10.1.3.156,node-2"
+    ],
+    "describe": "Name: api-server-pod\nNamespace: default\nNode: node-1\nStatus: Running\nIP: 10.1.2.34\nRestart Count: 4\nEvents:\n  Type     Reason     Age   From     Message\n  ----     ------     ---   ----     -------\n  Normal   Pulled     1m    kubelet  Container image pulled\n  Warning  BackOff    2m    kubelet  Back-off restarting failed container\n",
+    "logs": "[INFO] Node registered with the cluster\n[WARNING] Container took too long to start\n[ERROR] Failed to start container runtime",
+    "events": "LAST SEEN   TYPE      REASON     OBJECT             MESSAGE\n1m          Warning   BackOff    pod/api-server     Back-off restarting failed container\n2m          Normal    Pulled     pod/api-server     Successfully pulled image \"api:v1.2\"\n",
+    "top_pods": "NAMESPACE     NAME              CPU(cores)   MEMORY(bytes)\ndefault       api-server-pod    120m         890Mi\ndefault       redis-cache        30m         110Mi\n",
+    "node": "Name: node-1\nMemoryPressure: False\nDiskPressure: False\nConditions:\n  Ready: True\n  MemoryPressure: False\nTaints: <none>\n"
+  }
+]

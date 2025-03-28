@@ -1,0 +1,17 @@
+2025-03-27T17:50:48.985441Z ERROR kubelet: Pod crashloop backoff
+2025-03-27T17:50:50.337284Z WARNING etcd: Container took too long to start
+2025-03-27T17:50:50.914149Z WARNING etcd: Container took too long to start
+2025-03-27T17:50:52.083557Z INFO etcd: Node registered with the cluster
+2025-03-27T17:50:53.312159Z ERROR apiserver: Failed to start container runtime
+2025-03-27T18:05:40.728251Z WARNING kubelet: Container took too long to start
+2025-03-27T18:05:41.240531Z INFO scheduler: Started container successfully
+2025-03-27T18:05:42.426152Z INFO etcd: Successfully pulled image 'nginx:latest'
+2025-03-27T18:05:43.279731Z INFO controller-manager: Node registered with the cluster
+2025-03-27T18:05:44.378747Z INFO apiserver: Started container successfully
+2025-03-27T18:05:45.552378Z INFO scheduler: Node registered with the cluster
+2025-03-28T09:40:45.945259Z INFO etcd: Node registered with the cluster
+2025-03-28T09:40:47.123522Z INFO etcd: Started container successfully
+2025-03-28T09:40:47.907809Z WARNING scheduler: Pod eviction triggered due to memory usage
+2025-03-28T09:40:48.544340Z INFO etcd: Started container successfully
+2025-03-28T09:42:16.308616Z INFO etcd: Successfully pulled image 'nginx:latest'
+2025-03-28T09:42:17.697940Z INFO apiserver: Started container successfully
