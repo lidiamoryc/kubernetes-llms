@@ -1,4 +1,5 @@
 transformers
 datetime
-json
-os
+numpy
+sentence_transformers
+faiss-cpu
