@@ -24331,7 +24331,8 @@ individual Secrets and ConfigMaps as immutable. For clusters that extensively us
 (at least tens of thousands of unique ConfigMap to Pod mounts), preventing changes to their
 data has the following advantages:
 
-273	A container using a ConfigMap as a [subPath](/docs/concepts/storage/volumes#using-subpath) volume mount will not receive ConfigMap updates.
+273
+A container using a ConfigMap as a [subPath](/docs/concepts/storage/volumes#using-subpath) volume mount will not receive ConfigMap updates.
 
 
 
@@ -26351,7 +26352,9 @@ immutable: true
 Once a ConfigMap is marked as immutable, it is _not_ possible to revert this change
 nor to mutate the contents of the `data` or the `binaryData` field. You can
 only delete and recreate the ConfigMap. Because existing Pods maintain a mount point
-293	apiVersion: v1
+293
+
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: myconfigmap
