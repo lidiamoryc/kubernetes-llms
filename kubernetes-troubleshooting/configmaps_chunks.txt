@@ -24028,7 +24028,8 @@ the Pod is allowed to start.
 
 The Kubernetes feature _Immutable Secrets and ConfigMaps_ provides an option to set
 individual Secrets and ConfigMaps as immutable. For clusters that extensively use ConfigMaps
-270	ConfigMaps consumed as environment variables are not updated automatically and require a pod restart. 
+270
+ConfigMaps consumed as environment variables are not updated automatically and require a pod restart.
 
 
 A container using a ConfigMap as a [subPath](/docs/concepts/storage/volumes#using-subpath) volume mount will not receive ConfigMap updates.
@@ -27061,7 +27062,8 @@ to the deleted ConfigMap, it is recommended to recreate these pods.
 * Read about [Secrets](/docs/concepts/configuration/secret/).
 * Read [Configure a Pod to Use a ConfigMap](/docs/tasks/configure-pod-container/configure-pod-configmap/).
 * Read about [changing a ConfigMap (or any other Kubernetes object)](/docs/tasks/manage-kubernetes-objects/update-api-object-kubectl-patch/)
-300	```
+300
+```
 
 The following command will create the ConfigMap object:
 

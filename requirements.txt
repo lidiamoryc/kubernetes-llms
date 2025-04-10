@@ -1,5 +1,7 @@
-transformers
-datetime
-numpy
+transformers~=4.51.1
+datetime~=5.5
+numpy~=2.2.4
 sentence_transformers
-faiss-cpu
+faiss-cpu~=1.10.0
+sentence-transformers~=4.0.2
+openai~=1.72.0
