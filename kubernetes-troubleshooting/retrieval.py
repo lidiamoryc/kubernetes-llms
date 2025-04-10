@@ -47,7 +47,7 @@ metadata = load_metadata(METADATA_PATH)
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
-def retrieve(query: str, k: int = 5):
+def retrieve(query: str, k: int = 10):
     query_embedding = model.encode([query])
     query_vector = np.array(query_embedding).astype("float32")
     distances, indices = index.search(query_vector, k)
@@ -65,6 +65,7 @@ def enhance_query_with_hyde(query: str) -> str:
     from openai import OpenAI
 
     openai_api_key = config.get(os.getenv("OPEN_AI_API_KEY"))
+    # openai_api_key = config.get("openai_api_key")
     if not openai_api_key:
         raise ValueError("OpenAI API key is missing in the config file.")
 
@@ -104,14 +105,13 @@ def retrieve_few_shot(query: str, k: int = 5):
     return retrieve(few_shot_query, k)
 
 
-def test_retrieval_methods(case_name: str, query: str, output_dir="results", k: int = 5):
+def retrieval_methods(case_name: str, query: str, output_dir="results", k: int = 5):
     hyde_result = retrieve_hyde(query, k)
 
     results = {
         "baseline": retrieve(query, k),
         "hyde": hyde_result["results"],
         "hyde_query": hyde_result["hyde_query"],
-        "zero_shot": retrieve_zero_shot(query, k),
         "few_shot": retrieve_few_shot(query, k),
     }
 
@@ -127,7 +127,7 @@ def test_retrieval_methods(case_name: str, query: str, output_dir="results", k: 
 
 if __name__ == "__main__":
     # Test 1 - ConfigMap problem
-    test_retrieval_methods("ConfigMap_problem", config_map_query)
+    retrieval_methods("ConfigMap_problem", config_map_query)
 
     # # Test 2 - Inny problem
     # query2 = "Błąd startupu serwisu w klastrze Kubernetes."
