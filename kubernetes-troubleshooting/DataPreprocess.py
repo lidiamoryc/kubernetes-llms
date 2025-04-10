@@ -20,20 +20,21 @@ def load_and_clean(filepath):
 # Step 2: Chunk the text
 def chunk_text(text, max_length=800, overlap=100):
     sentences = text.split('\n')
-    chunks, current_chunk = [], []
+    chunks = []
+    current_chunk = ""
 
     for sentence in sentences:
-        if sum(len(s) for s in current_chunk) + len(sentence) < max_length:
-            current_chunk.append(sentence)
+        if len(current_chunk) + len(sentence) + 1 <= max_length:
+            current_chunk += sentence + '\n'
         else:
-            chunks.append('\n'.join(current_chunk))
-            current_chunk = current_chunk[-overlap:] + [sentence]
+            chunks.append(current_chunk.strip())
+            # Keep overlap (last `overlap` characters) and continue
+            current_chunk = current_chunk[-overlap:] + sentence + '\n'
 
-    if current_chunk:
-        chunks.append('\n'.join(current_chunk))
+    if current_chunk.strip():
+        chunks.append(current_chunk.strip())
 
     return chunks
-
 
 # Step 3: Embed and save to FAISS
 def embed_and_save(chunks, index_file, metadata_file):
@@ -47,7 +48,7 @@ def embed_and_save(chunks, index_file, metadata_file):
 
     with open(metadata_file, "w", encoding="utf-8") as f:
         for i, chunk in enumerate(chunks):
-            f.write(f"{i}\t{chunk}\n")
+            f.write(f"{i}\n{chunk.strip()}\n\n")
 
 
 # --- RUN THE PIPELINE ---
