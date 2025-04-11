@@ -36,7 +36,6 @@ def chunk_text(text, max_length=800, overlap=100):
 
     return chunks
 
-
 # Step 3: Embed and save to FAISS
 def embed_and_save(chunks, index_file, metadata_file):
     model = SentenceTransformer("all-MiniLM-L6-v2")
