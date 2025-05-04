@@ -1,0 +1,13 @@
+{
+  "pod_status": "CrashLoopBackOff",
+  "logs": "2025-05-04 11:40:00 INFO Starting app...\n2025-05-04 11:40:01 ERROR Connection refused to DB_HOST=10.0.0.5\n2025-05-04 11:40:02 WARN Retrying connection...\n2025-05-04 11:40:03 FATAL Database unreachable - exiting",
+  "events": [
+    "Scheduled: Successfully assigned default/web-pod to node-01",
+    "Pulled: Container image 'my-registry/app:v1.2'",
+    "Back-off restarting failed container",
+    "Warning: Failed to resolve DB_HOST"
+  ],
+  "env": {"DB_HOST": "10.0.0.5", "DB_PORT": "5432"},
+  "probe_config": {"timeoutSeconds": 1},
+  "summary": "Database connection failures causing pod crashes"
+}

@@ -1,0 +1,18 @@
+{
+    "pod_status": "CreateContainerConfigError",
+    "logs": [
+      "2025-04-06T14:33:01Z [ERROR] Failed to read config file at /app/config.json",
+      "Error: ENOENT: no such file or directory, open '/app/config.json'"
+    ],
+    "events": [
+      "Warning: FailedMount - Unable to mount volumes for pod: configmap 'web-app-config' not found",
+      "Warning: FailedSync - Error syncing pod"
+    ],
+    "env": [],
+    "volume_config": {
+      "mountPath": "/app/config.json",
+      "subPath": "config.json",
+      "configMapRef": "web-app-config"
+    }
+  }
+  

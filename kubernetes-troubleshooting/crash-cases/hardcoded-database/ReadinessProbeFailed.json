@@ -1,0 +1,15 @@
+{
+    "pod_status": "Running",
+    "logs": "GET /healthz 404 2.3ms - 9",
+    "events": [
+      "Readiness probe failed: HTTP probe failed with statuscode: 404",
+      "Container myapp not ready"
+    ],
+    "env": [],
+    "probe_config": {
+      "path": "/healthz",
+      "port": 8080,
+      "initialDelaySeconds": 3
+    }
+  }
+  

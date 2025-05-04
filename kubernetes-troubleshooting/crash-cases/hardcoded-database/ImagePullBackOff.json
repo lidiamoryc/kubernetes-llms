@@ -1,0 +1,13 @@
+{
+    "pod_status": "ImagePullBackOff",
+    "logs": "Error response from daemon: pull access denied for my-registry/app:v1.3",
+    "events": [
+      "Failed to pull image \"my-registry/app:v1.3\": rpc error: code = Unknown desc = failed to pull and unpack image",
+      "Back-off pulling image \"my-registry/app:v1.3\""
+    ],
+    "env": [
+      {"name": "REGISTRY_CRED", "value": "*****"}
+    ],
+    "probe_config": null
+  }
+  
