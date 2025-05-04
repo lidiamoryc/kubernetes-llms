@@ -1,7 +1,7 @@
 ## 🔁 Overview of Steps:
 1. Collect Runtime Context from the app -> **for now we take example contexts, later we will automatically collect them**
   The context object:
-   ```json
+  ```json
    {
   "logs": "...",
   "traceback": "...",
