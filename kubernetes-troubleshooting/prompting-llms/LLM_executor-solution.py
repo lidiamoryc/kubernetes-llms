@@ -1,6 +1,7 @@
 from typing import Literal
 import openai
 import anthropic 
+from huggingface_hub import InferenceClient
 
 import os
 
@@ -13,7 +14,7 @@ class LLMExecutor:
         self.api_keys = {
             "openai": os.getenv("OPENAI_API_KEY"),
             "anthropic": os.getenv("ANTHROPIC_API_KEY"),
-            # others
+            "huggingface": os.getenv("HF_TOKEN"),
         }
 
     def run(self, prompt: str) -> str:
@@ -23,6 +24,8 @@ class LLMExecutor:
             return self._query_claude(prompt)
         elif self.model == "mistral":
             return self._query_mistral(prompt)
+        elif self.model == "llama":
+            return self._query_llama(prompt)
         else:
             raise ValueError(f"Unsupported model: {self.model}")
 
@@ -45,6 +48,14 @@ class LLMExecutor:
             max_tokens=1024
         )
         return response.content[0].text
+    
+    def _query_llama(self, prompt: str) -> str:
+        client = InferenceClient(
+            model="meta-llama/Meta-Llama-3-8B-Instruct",
+            token=self.api_keys["huggingface"]
+        )
+        response = client.text_generation(prompt=prompt, max_new_tokens=512)
+        return response.strip()
 
     def _query_mistral(self, prompt: str) -> str:
         raise NotImplementedError("Add mistral client if needed.")

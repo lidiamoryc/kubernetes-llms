@@ -1,0 +1,6 @@
+{"messages": [
+    {"role": "system", "content": "You are a Kubernetes troubleshooting assistant."},
+    {"role": "user", "content": "Troubleshoot this CrashLoopBackOff...\nLogs: ...\nEvents: ..."},
+    {"role": "assistant", "content": "Relevant Documentation Excerpts:\n\n1. Service Discovery...\n\nStep by step solution:\n1. Replace static IP..."}
+  ]}
+  
