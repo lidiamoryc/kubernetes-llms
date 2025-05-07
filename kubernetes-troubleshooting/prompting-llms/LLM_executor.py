@@ -3,7 +3,11 @@ import openai
 import anthropic 
 from huggingface_hub import InferenceClient
 
+import transformers
+
 import os
+import requests
+import torch
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -49,13 +53,33 @@ class LLMExecutor:
         )
         return response.content[0].text
     
+    
+    
     def _query_llama(self, prompt: str) -> str:
-        client = InferenceClient(
-            model="meta-llama/Meta-Llama-3-8B-Instruct",
-            token=self.api_keys["huggingface"]
-        )
-        response = client.text_generation(prompt=prompt, max_new_tokens=512)
-        return response.strip()
+        # model_id = "meta-llama/Meta-Llama-3.1-8B-Instruct"
+
+        # # Create a pipeline for text generation
+        # pipeline = transformers.pipeline(
+        #     "text-generation",
+        #     model=model_id,
+        #     model_kwargs={"torch_dtype": torch.bfloat16},
+        #     device_map="auto",  # or "cuda" if you want to force GPU
+        #     return_full_text=False,
+        # )
+
+        # # Prepare your chat messages
+        # messages = [
+        #     {"role": "system", "content": "You are a helpful assistant."},
+        #     {"role": "user", "content": "What is the capital of France?"},
+        # ]
+
+        # # Apply the chat template to format the prompt
+        # prompt = pipeline.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+
+        # # Generate a response
+        # outputs = pipeline(prompt, max_new_tokens=256)
+        # print(outputs[0]["generated_text"])
+        pass
 
     def _query_mistral(self, prompt: str) -> str:
         raise NotImplementedError("Add mistral client if needed.")

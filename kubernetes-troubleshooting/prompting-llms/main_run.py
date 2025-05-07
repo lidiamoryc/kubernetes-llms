@@ -29,8 +29,9 @@ prompt = prompt_builder.build_prompt()
 
 print(prompt)
 
-executor = LLMExecutor("claude-3")
+executor = LLMExecutor("llama")
 
 output = executor.run(prompt)
 
 print(output)
+
