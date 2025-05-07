@@ -3,6 +3,11 @@ import os
 import json
 import os
 
+from prompts.zero_shot import get_zero_shot_prompt_for_solution, get_zero_shot_prompt_for_documentation
+from prompts.one_shot import get_one_shot_prompt_for_solution, get_one_shot_prompt_for_documentation
+from prompts.few_shot import get_few_shot_prompt_for_solution, get_few_shot_prompt_for_documentation
+
+
 class KubernetesPromptBuilder:
     def __init__(self, json_path: str):
         if not os.path.isfile(json_path):
@@ -31,53 +36,37 @@ class KubernetesPromptBuilder:
         self.probe_note = ""
         if self.data.get("probe_config", {}).get("timeoutSeconds", 1) < 2:
             self.probe_note = "Probe timeout might be too short for database dependencies"
+        
+
+    def build_prompt_for_documentation(self, mode="zero-shot") -> str:
+
+        if mode == "zero-shot":
+
+            return get_zero_shot_prompt_for_documentation(self.filtered_logs, self.filtered_logs, json.dumps(self.data.get('env', {})), self.probe_note)
+        
+        if mode == "one-shot":
+
+            return get_one_shot_prompt_for_documentation(self.filtered_logs, self.filtered_logs, json.dumps(self.data.get('env', {})), self.probe_note)
+
+        if mode == "few-shot":
+    
+            return get_few_shot_prompt_for_documentation(self.filtered_logs, self.filtered_logs, json.dumps(self.data.get('env', {})), self.probe_note)
+        
+        else:
+            raise ValueError("Invalid mode. Choose 'zero-shot', 'one-shot', or 'few-shot'")
+        
 
 
-    def build_prompt(self, mode="zero-shot") -> str:
-
-        base_prompt=f"""Troubleshoot this Kubernetes CrashLoopBackOff error:
-
-                **Diagnostic Evidence**:
-                - Critical Logs: {chr(10).join(self.filtered_logs)}
-                - Cluster Events: {chr(10).join(self.critical_events)}
-                - Database Config: {json.dumps(self.data.get('env', {}), indent=2)}
-                - Probe Warning: {self.probe_note}
-
-                **Required Response Format**:
-                Relevant Documentation Excerpts:
-
-                List 3-5 Kubernetes documentation snippets. For each, include:
-                1. A short **title**
-                2. A brief **quoted excerpt** from Kubernetes docs (1-2 lines)
-
-                Format:
-                1. <Title>  
-                "<documentation quote>"
-
-                ...
-
-                Step by step solution:
-
-                Provide a **numbered list of actions**. Each step should include:
-                - A short **title**
-                - **Code snippet**, **kubectl command**, or YAML config fix
-                - Optional reasoning or verification tip
-
-                Format:
-                1. <Step Name>  
-                <command, YAML or explanation>
-
-                ...
-
-                Ensure the answer is **structured, actionable, and faithful to Kubernetes best practices**.
-                """
+    def build_prompt_for_solution(self, mode="zero-shot") -> str:
 
         if mode == "zero-shot":
             
-            return base_prompt
+            pass
+
+            # return get_zero_shot_prompt_for_solution(self.filtered_logs, self.filtered_logs, json.dumps(self.data.get('env', {})), self.probe_note)
         
-                #TODO: think if we should parse it through the Pydantic for structured output?
-                #TODO: is the ground truth in the correct format? we can adjust it
+            #TODO: think if we should parse it through the Pydantic for structured output?
+            #TODO: is the ground truth in the correct format? we can adjust it
 
         elif mode == "one-shot":
 
@@ -170,5 +159,3 @@ class KubernetesPromptBuilder:
 
         else:
             raise ValueError("Invalid mode. Choose 'zero-shot', 'one-shot', or 'few-shot'")
-
-
