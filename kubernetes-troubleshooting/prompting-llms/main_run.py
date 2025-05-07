@@ -4,7 +4,7 @@ from data_preprocessing import KubernetesPromptBuilder
 from LLM_executor import LLMExecutor
 
 import re 
-
+import json
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -38,42 +38,20 @@ prompt = prompt_builder.build_prompt_for_documentation()
 
 print(prompt)
 
-executor = LLMExecutor("gpt-3.5-turbo")
+executor = LLMExecutor("llama")
 
 output = executor.run(prompt)
 
 print(output)
 
-# RunTest(input, expected_output) -> 2 metrics
-golden_output_string = """
 
-1. Service Discovery & DNS
-"Pods should reference Services by their DNS name (<service>.<namespace>.svc.cluster.local), not static IPs. IPs are ephemeral in Kubernetes clusters."
+answers_dir = current_dir.parent / "crash-cases" / "ground-truth-answers" / "ANS-CrashLoopBackOff.json"
 
-2. CrashLoopBackOff Definition
-"A pod enters CrashLoopBackOff state when its containers repeatedly crash. Check logs with kubectl logs --previous to identify the root cause."
-
-3. Readiness Probe Best Practices
-*"For applications with slow startup:
-
-Set initialDelaySeconds longer than maximum initialization time
-
-timeoutSeconds should exceed expected request processing time"*
-
-4. Endpoint Verification
-*"Validate service-to-pod mapping with:
-
-kubectl get endpoints <service-name>  
-Empty results indicate no healthy pods match service selectors."*
-
-5. DNS Resolution Troubleshooting
-*"Debug DNS issues from within pods using:
-
-kubectl exec -it <pod> -- nslookup <service>  
-Failure indicates CoreDNS issues or missing service."*
+with open(answers_dir, "r", encoding="utf-8") as f:
+    ground_truth = json.load(f)
 
 
-"""
+gt = ground_truth["documentation"]      
 
 
 def split_documentation_blocks(text: str) -> list:
@@ -85,7 +63,6 @@ def split_documentation_blocks(text: str) -> list:
     blocks = re.split(r'\n?\s*\d+\.\s+', text.strip())
     return [b.strip() for b in blocks if b.strip()]
 
-gt = split_documentation_blocks(golden_output_string)
 pred = split_documentation_blocks(output)
 
 print(gt)
@@ -96,8 +73,23 @@ metrics = DocumentationMetrics()
 
 # BERTScore (semantic match)
 bert_score = metrics.compute_bertscore(pred, gt)
+precision = metrics.precision_at_k(gt, pred)
+mrr = metrics.mean_reciprocal_rank(gt, pred)
 
-print(bert_score)
+print(bert_score, precision, mrr)
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Precision@k and MRR require exact/ID-based matching, so consider simple string overlaps:
 # precision = metrics.precision_at_k_semantic(gt, pred)
 # mrr = metrics.mrr_semantic(gt, pred)

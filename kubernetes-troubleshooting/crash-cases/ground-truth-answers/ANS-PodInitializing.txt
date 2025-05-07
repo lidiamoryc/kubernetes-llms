@@ -1,0 +1,95 @@
+Relevant Documentation Excerpts
+
+1. Pod Initialization and Init Containers
+“Init containers run before app containers in a Pod are started. If an Init container fails, Kubernetes retries it until it succeeds or the Pod is deleted.”
+
+2. Service Discovery in Kubernetes
+“Kubernetes uses DNS to allow Pods to discover Services. Each Service is assigned a DNS name, and Pods can use that name to communicate with the service.”
+
+3. Endpoint Validation
+“If a Pod cannot reach a service via DNS, ensure the service has endpoints:
+kubectl get endpoints <service-name>
+Empty output means no matching Pods are available for the service selector.”
+
+4. Init Container Troubleshooting
+“Use kubectl describe pod and kubectl logs <pod> -c <init-container> to understand why an Init container is stuck or failing. Network or DNS issues are common causes.”
+
+5. Networking and Connectivity Testing
+“You can use kubectl exec to test connectivity to a service. Use tools like nc or curl within the container.”
+
+
+
+
+
+Step-by-step Solution
+
+1. Check DNS Resolution Inside Pod
+
+kubectl exec -it <pod-name> -- nslookup redis-service
+If this fails, there’s a DNS misconfiguration or the Service does not exist.
+
+2. Verify Redis Service Exists and Exposes Port
+
+kubectl get svc redis-service
+You should see output with PORT(S): 6379/TCP.
+
+If the service is missing, create it:
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+Apply it with:
+
+kubectl apply -f redis-service.yaml
+
+3. Check Redis Pod Status
+
+kubectl get pods -l app=redis
+Make sure the Redis Pod is Running and Ready.
+
+If not, debug Redis startup using:
+
+kubectl logs <redis-pod-name>
+
+4. Validate Endpoints
+
+kubectl get endpoints redis-service
+Output should contain IP addresses and ports like 10.0.0.5:6379.
+
+Empty output means no Pods are matched by the service’s selector. Fix labels in the Deployment or Service.
+
+5. Inspect Init Container Logs
+
+kubectl logs <problem-pod> -c <init-container-name>
+Find the root cause — likely a connection timeout or DNS failure.
+
+6. Test Connectivity to Redis
+
+kubectl exec -it <pod-name> -- nc -zv redis-service 6379
+Success: prints “succeeded” or “open”
+
+Failure: indicates Redis Pod is down, not listening, or there's a network policy blocking traffic.
+
+7. Add Readiness Probe (Optional)
+
+If Redis takes time to be ready, ensure the main container uses a readiness probe with retry logic:
+
+readinessProbe:
+  tcpSocket:
+    port: 6379
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 2
+
+8. Restart Pod to Re-Initialize
+
+kubectl delete pod <problem-pod>
+It will be recreated by the Deployment controller.

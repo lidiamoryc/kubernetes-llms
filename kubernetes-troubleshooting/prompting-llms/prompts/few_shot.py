@@ -77,8 +77,134 @@ Do not include commands, solutions, or YAML fixes.
 
 
 
+def get_few_shot_prompt_for_solution(filtered_logs, critical_events, env, probe_note, documentation_excerpts):
 
+    return f"""
+You are a Kubernetes assistant helping troubleshoot pod errors.
 
-def get_few_shot_prompt_for_solution(filtered_logs, critical_events, env, probe_note):
-    pass
+Your job is to return a structured, step-by-step solution based on:
+1. Logs and events from a failed pod
+2. Relevant Kubernetes documentation excerpts
 
+Each solution must include:
+- A clear action title
+- A code snippet (kubectl command or YAML)
+- Optional explanation or verification tip
+
+---
+
+### Example 1
+
+**Diagnostic Evidence**:
+- Critical Logs:  
+  FATAL Database unreachable - exiting  
+  ERROR Connection refused to DB_HOST=10.0.0.5
+
+- Events:  
+  Back-off restarting failed container  
+  Warning: Failed to resolve DB_HOST
+
+- Environment Variables:  
+  {{'DB_HOST': '10.0.0.5', 'DB_PORT': '5432'}}
+
+- Probe Warning:  
+  Probe timeout might be too short for database dependencies
+
+**Documentation Excerpts**:
+1. Service Discovery & DNS  
+"Pods should reference Services by their DNS name (...), not static IPs."
+
+2. Readiness Probe Best Practices  
+"For applications with slow startup: increase initialDelaySeconds and timeoutSeconds."
+
+**Step-by-Step Solution**:
+
+1. Replace Static IP with DNS  
+```yaml
+env:
+- name: DB_HOST
+  value: "database-service.default.svc.cluster.local"
+
+2. Create Service for DB
+kubectl get svc database-service -n default
+
+If missing:
+apiVersion: v1
+kind: Service
+metadata:
+  name: database-service
+spec:
+  selector:
+    app: database
+  ports:
+    - port: 5432
+
+3. Fix Readiness Probe
+
+readinessProbe:
+  initialDelaySeconds: 20
+  timeoutSeconds: 3
+
+  ---
+
+  Example 2
+
+  Diagnostic Evidence:
+
+Critical Logs:
+ERROR Failed to read config file at /app/config.json
+
+Events:
+Warning: FailedMount - configmap 'web-app-config' not found
+
+Environment Variables:
+{{ }}
+
+Probe Warning:
+None
+
+Documentation Excerpts:
+
+ConfigMap Volume Mount
+"Pods using subPath volume mounts must ensure the referenced ConfigMap exists."
+
+Step-by-Step Solution:
+
+1. Create the Missing ConfigMap
+
+kubectl create configmap web-app-config --from-file=config.json
+
+2. Verify Mount Path
+
+volumeMounts:
+- name: config
+  mountPath: /app/config.json
+  subPath: config.json
+
+3. Restart Pod 
+
+kubectl rollout restart deployment/web-deployment
+
+---
+
+Current Case
+
+Diagnostic Evidence:
+
+Critical Logs:
+{chr(10).join(filtered_logs)}
+
+Events:
+{chr(10).join(critical_events)}
+
+Environment Variables:
+{env}
+
+Probe Warning:
+{probe_note}
+
+Documentation Excerpts:
+{documentation_excerpts}
+
+Now provide a step-by-step solution for this case following the format above.
+"""

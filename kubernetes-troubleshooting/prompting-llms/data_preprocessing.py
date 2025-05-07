@@ -58,105 +58,22 @@ class KubernetesPromptBuilder:
         
 
 
-    def build_prompt_for_solution(self, mode="zero-shot") -> str:
+    def build_prompt_for_solution(self, documentation_excerpts, mode="zero-shot") -> str:
 
         if mode == "zero-shot":
             
-            pass
-
-            # return get_zero_shot_prompt_for_solution(self.filtered_logs, self.filtered_logs, json.dumps(self.data.get('env', {})), self.probe_note)
+            return get_zero_shot_prompt_for_solution(self.filtered_logs, self.filtered_logs, json.dumps(self.data.get('env', {})), self.probe_note, documentation_excerpts)
         
             #TODO: think if we should parse it through the Pydantic for structured output?
             #TODO: is the ground truth in the correct format? we can adjust it
 
         elif mode == "one-shot":
 
-            one_shot_example = """Relevant Documentation Excerpts:
-
-                                1. Service Discovery & DNS
-                                "Pods should reference Services by their DNS name (<service>.<namespace>.svc.cluster.local), not static IPs. IPs are ephemeral in Kubernetes clusters."
-
-                                2. CrashLoopBackOff Definition
-                                "A pod enters CrashLoopBackOff state when its containers repeatedly crash. Check logs with kubectl logs --previous to identify the root cause."
-
-                                3. Readiness Probe Best Practices
-                                "For applications with slow startup: set initialDelaySeconds longer than initialization time; timeoutSeconds should exceed request time."
-
-                                4. Endpoint Verification
-                                "Validate service-to-pod mapping with: kubectl get endpoints <service-name>. Empty results indicate no healthy pods match selectors."
-
-                                5. DNS Resolution Troubleshooting
-                                "Debug DNS issues using: kubectl exec -it <pod> -- nslookup <service>. Failures suggest CoreDNS issues or missing services."
-
-                                Step by step solution:
-
-                                1. Replace Static IP with Service DNS Name
-
-                                # Before
-                                env: { "DB_HOST": "10.0.0.5" }
-
-                                # After
-                                env:
-                                - name: DB_HOST
-                                value: "database-service.default.svc.cluster.local"
-
-                                2. Verify Database Service Exists
-
-                                kubectl get svc database-service -n default
-
-                                If not found, define the service:
-
-                                apiVersion: v1
-                                kind: Service
-                                metadata:
-                                name: database-service
-                                namespace: default
-                                spec:
-                                selector:
-                                    app: database
-                                ports:
-                                    - protocol: TCP
-                                    port: 5432
-                                    targetPort: 5432
-
-                                3. Check Service Endpoints
-
-                                kubectl get endpoints database-service -o wide
-
-                                If empty: check pod labels or deployment.
-
-                                4. Test DNS Resolution
-
-                                kubectl exec web-pod -- nslookup database-service.default.svc.cluster.local
-
-                                If fails: CoreDNS may be misconfigured.
-
-                                5. Validate Network Connectivity
-
-                                kubectl exec web-pod -- nc -zv database-service.default.svc.cluster.local 5432
-
-                                If timeout: check firewall rules and pod readiness.
-
-                                6. Adjust Readiness Probe
-
-                                readinessProbe:
-                                httpGet:
-                                    path: /health
-                                    port: 8080
-                                initialDelaySeconds: 20
-                                timeoutSeconds: 3
-                                periodSeconds: 5
-
-                                7. Restart and Verify
-
-                                kubectl rollout restart deployment/web-deployment
-                                kubectl get pods -w
-                                """
-            
-            return one_shot_example + "\n\n" + base_prompt
+            return get_one_shot_prompt_for_solution(self.filtered_logs, self.filtered_logs, json.dumps(self.data.get('env', {})), self.probe_note, documentation_excerpts)
         
         elif mode == "few-shot":
-            pass
+            
+            return get_few_shot_prompt_for_solution(self.filtered_logs, self.filtered_logs, json.dumps(self.data.get('env', {})), self.probe_note, documentation_excerpts)
 
         else:
             raise ValueError("Invalid mode. Choose 'zero-shot', 'one-shot', or 'few-shot'")

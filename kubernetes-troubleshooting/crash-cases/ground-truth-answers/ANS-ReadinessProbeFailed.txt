@@ -1,0 +1,52 @@
+Relevant Documentation Excerpts:
+
+1. Readiness Probes and HTTP Status Codes
+"A readiness probe checks if the application is ready to serve requests. If the probe returns a failure (e.g., 404), the container is marked as not ready and removed from the service's endpoints."
+
+2. Proper Configuration of Readiness Probes
+"The HTTP probe must return a status code between 200 and 399 to be considered successful. A 404 status code is treated as a failure."
+
+3. Serving Readiness Probe Paths
+"The application must expose an HTTP server and listen on the defined port and path. Ensure the endpoint (e.g., /healthz) exists and returns an acceptable status code."
+
+
+
+
+Step-by-Step Solution:
+
+1. Check Application Endpoint Availability
+Make sure your application serves the /healthz path:
+
+curl http://localhost:8080/healthz
+If it returns 404, the endpoint does not exist or is not correctly implemented.
+
+2. Fix the Application or Update the Probe Path
+
+Option A: Modify the application to serve /healthz and return 200 OK
+
+Option B: Update the readiness probe to target an existing path, e.g. /ready
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 8080
+  initialDelaySeconds: 3
+  periodSeconds: 5
+
+3. Test Locally
+Run the container locally or within a temporary pod:
+
+kubectl run temp --image=myapp-image --port=8080 -it --rm -- bash
+curl http://localhost:8080/healthz
+
+4. Apply Updated Configuration
+After modifying the probe path or application:
+
+kubectl apply -f deployment.yaml
+kubectl rollout restart deployment/myapp-deployment
+
+5. Verify Readiness Status
+
+kubectl get pods
+kubectl describe pod <pod-name>
+Ensure the pod is now marked as Ready and no Readiness probe failed events are shown.

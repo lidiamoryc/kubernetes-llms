@@ -1,0 +1,13 @@
+{
+    "documentation": [
+        "1.  ImagePullBackOff Meaning \n The status ImagePullBackOff means that a container could not start because Kubernetes could not pull a container image (for reasons such as invalid image name, or pulling from a private registry without imagePullSecret). The BackOff part indicates that Kubernetes will keep trying to pull the image, with an increasing back-off delay.",
+        "2. Causes of Image Pull Failures \n Kubernetes could not pull a container image for reasons such as invalid image name, or pulling from a private registry without imagePullSecret.",
+        "3. Using imagePullSecrets for Private Registries \n Kubernetes supports specifying container image registry keys on a Pod. imagePullSecrets must all be in the same namespace as the Pod. The referenced Secrets must be of type kubernetes.io/dockercfg or kubernetes.io/dockerconfigjson. This is the recommended approach to run containers based on images in private registries.",
+        "4. How imagePullPolicy Affects Image Pulling \n The imagePullPolicy for a container and the tag of the image affect when the kubelet attempts to pull (download) the specified image. \n If you would like to always force a pull, you can do one of the following: \n Set the imagePullPolicy of the container to Always. \n Omit the imagePullPolicy and use :latest as the tag for the image to use; Kubernetes will set the policy to Always when you submit the Pod. \n Omit the imagePullPolicy and the tag for the image to use; Kubernetes will set the policy to Always when you submit the Pod."
+    ],
+
+    "solution": ""
+}
+
+
+

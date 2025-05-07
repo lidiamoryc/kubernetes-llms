@@ -12,8 +12,17 @@ import torch
 from dotenv import load_dotenv
 load_dotenv()
 
+# HF_TOKEN = os.getenv("HF_TOKEN"),
+
+# from huggingface_hub import model_info
+# try:
+#     info = model_info("meta-llama/Meta-Llama-3.1-8B-Instruct", token=HF_TOKEN)
+#     print("Access granted")
+# except Exception as e:
+#     print(f"Access denied: {e}")
+
 class LLMExecutor:
-    def __init__(self, model: Literal["gpt-4", "gpt-3.5-turbo", "claude-3", "mistral"]):
+    def __init__(self, model: Literal["gpt-4", "gpt-3.5-turbo", "claude-3", "llama", "mistral"]):
         self.model = model
         self.api_keys = {
             "openai": os.getenv("OPENAI_API_KEY"),
@@ -52,34 +61,21 @@ class LLMExecutor:
             max_tokens=1024
         )
         return response.content[0].text
-    
+
     
     
     def _query_llama(self, prompt: str) -> str:
-        # model_id = "meta-llama/Meta-Llama-3.1-8B-Instruct"
-
-        # # Create a pipeline for text generation
-        # pipeline = transformers.pipeline(
-        #     "text-generation",
-        #     model=model_id,
-        #     model_kwargs={"torch_dtype": torch.bfloat16},
-        #     device_map="auto",  # or "cuda" if you want to force GPU
-        #     return_full_text=False,
-        # )
-
-        # # Prepare your chat messages
-        # messages = [
-        #     {"role": "system", "content": "You are a helpful assistant."},
-        #     {"role": "user", "content": "What is the capital of France?"},
-        # ]
-
-        # # Apply the chat template to format the prompt
-        # prompt = pipeline.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-
-        # # Generate a response
-        # outputs = pipeline(prompt, max_new_tokens=256)
-        # print(outputs[0]["generated_text"])
-        pass
+        client = InferenceClient(
+            token=self.api_keys["huggingface"],
+            model="meta-llama/Llama-3.1-8B-Instruct")
+        
+        response = client.text_generation(
+            prompt, 
+            max_new_tokens=256,
+            temperature=0.6
+        )
+        return response
+        
 
     def _query_mistral(self, prompt: str) -> str:
         raise NotImplementedError("Add mistral client if needed.")

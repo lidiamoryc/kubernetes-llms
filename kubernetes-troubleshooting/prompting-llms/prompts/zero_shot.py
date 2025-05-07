@@ -42,47 +42,54 @@ def get_zero_shot_prompt_for_documentation(filtered_logs, critical_events, env, 
                         Only return documentation. Do not propose solutions, commands, or YAML configs.
                         """
 
+def get_zero_shot_prompt_for_solution(filtered_logs, critical_events, env, probe_note, documentation_excerpts):
 
-def get_zero_shot_prompt_for_solution(filtered_logs, critical_events, env, probe_note):
+    return f"""You are a Kubernetes troubleshooting assistant.
 
-    pass
-## to improve
+The user previously retrieved **relevant Kubernetes documentation excerpts** to help explain a pod failure. Your task is to use this information, along with the observed logs and events, to generate a **step-by-step fix**.
 
+---
 
-    # return f"""Troubleshoot this Kubernetes CrashLoopBackOff error:
+**Diagnostic Evidence**:
+- Critical Logs:
+{chr(10).join(filtered_logs)}
 
-    #             **Diagnostic Evidence**:
-    #             - Critical Logs: {chr(10).join(self.filtered_logs)}
-    #             - Cluster Events: {chr(10).join(self.critical_events)}
-    #             - Database Config: {json.dumps(self.data.get('env', {}), indent=2)}
-    #             - Probe Warning: {self.probe_note}
+- Cluster Events:
+{chr(10).join(critical_events)}
 
-    #             **Required Response Format**:
-    #             Relevant Documentation Excerpts:
+- Environment Variables:
+{env}
 
-    #             List 3-5 Kubernetes documentation snippets. For each, include:
-    #             1. A short **title**
-    #             2. A brief **quoted excerpt** from Kubernetes docs (1-2 lines)
+- Probe Warning:
+{probe_note}
 
-    #             Format:
-    #             1. <Title>  
-    #             "<documentation quote>"
+---
 
-    #             ...
+**Relevant Documentation**:
+{documentation_excerpts}
 
-    #             Step by step solution:
+---
 
-    #             Provide a **numbered list of actions**. Each step should include:
-    #             - A short **title**
-    #             - **Code snippet**, **kubectl command**, or YAML config fix
-    #             - Optional reasoning or verification tip
+**Instructions**:
+1. Use the documentation excerpts to infer the root cause.
+2. Return a **brief root cause explanation** (1–2 sentences).
+3. List **clear troubleshooting steps**, each with:
+   - A short title
+   - YAML fix or kubectl command
+   - Optional: validation command or reasoning
 
-    #             Format:
-    #             1. <Step Name>  
-    #             <command, YAML or explanation>
+---
 
-    #             ...
+**Response Format**:
 
-    #             Ensure the answer is **structured, actionable, and faithful to Kubernetes best practices**.
-    #             """
+**Root Cause**:  
+<short explanation>
 
+**Steps to Resolve**:
+
+1. <Step Title>  
+<code/config>  
+<optional tip or explanation>
+
+...
+"""

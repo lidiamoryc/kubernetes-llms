@@ -54,5 +54,93 @@ Only return documentation. Do not propose solutions, kubectl commands, or YAML.
 
 
 
-def get_one_shot_prompt_for_solution(filtered_logs, critical_events, env, probe_note):
-    pass
+def get_one_shot_prompt_for_solution(filtered_logs, critical_events, env, probe_note, documentation_excerpts):
+    return f"""You are a Kubernetes assistant helping troubleshoot pod errors.
+
+Your task is to propose a **step-by-step solution** based on the provided Kubernetes error signals and the most relevant official documentation excerpts.
+
+---
+
+**Diagnostic Evidence**:
+- Critical Logs:
+{chr(10).join(filtered_logs)}
+
+- Cluster Events:
+{chr(10).join(critical_events)}
+
+- Environment Variables:
+{env}
+
+- Probe Warning:
+{probe_note}
+
+---
+
+**Documentation Excerpts**:
+{documentation_excerpts}
+
+---
+
+### Example Output
+
+Step by step solution:
+
+1. Replace Static IP with Service DNS Name  
+```yaml
+# Before
+env: {{"DB_HOST": "10.0.0.5"}}
+
+# After
+env:
+- name: DB_HOST
+  value: "database-service.default.svc.cluster.local"
+
+  2. Verify Database Service Exists
+
+  kubectl get svc database-service -n default
+
+  If missing, create the service:
+
+    apiVersion: v1
+    kind: Service
+    metadata:
+    name: database-service
+    namespace: default
+    spec:
+    selector:
+        app: database
+    ports:
+        - protocol: TCP
+        port: 5432
+        targetPort: 5432
+
+  3. Check Service Endpoints
+
+  kubectl get endpoints database-service -o wide
+
+  4. Test DNS Resolution
+
+  kubectl exec web-pod -- nslookup database-service.default.svc.cluster.local
+
+  5. Validate Network Connectivity
+
+  kubectl exec web-pod -- nc -zv database-service.default.svc.cluster.local 5432
+
+  6. Adjust Readiness Probes
+
+  readinessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 20
+  timeoutSeconds: 3
+  periodSeconds: 5
+
+  7. Restart & Monitor
+
+  kubectl rollout restart deployment/web-deployment
+  kubectl get pods -w
+
+  Now, based on the diagnostic data and documentation, generate a similarly structured step-by-step solution.
+
+  """

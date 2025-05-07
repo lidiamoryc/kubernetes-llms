@@ -1,0 +1,73 @@
+Relevant Documentation Excerpts:
+
+1. OOMKilled Pod Status
+"A container is terminated and marked OOMKilled if it tries to use more memory than its limit. Kubernetes enforces these limits via the container runtime and the Linux kernel's OOM killer."
+
+2. Resource Limits in Pods
+"You can specify memory and CPU limits in a Pod specification. The memory limit is enforced strictly: if a container exceeds it, it is killed."
+
+3. Configuring Node.js Memory via Environment Variables
+"For Node.js applications, you can pass options like --max-old-space-size via the NODE_OPTIONS environment variable to raise or lower heap memory allocation."
+
+4. Container Exit Code 137
+"Exit code 137 indicates that the container was terminated by the kernel due to an out-of-memory condition (SIGKILL)."
+
+5. Monitoring Resource Usage with Metrics Server
+"You can use the Kubernetes Metrics Server or other tools to inspect the actual memory usage of running containers before setting limits."
+
+
+
+
+Step-by-Step Solution:
+
+1. Analyze Current Memory Limits
+
+Check the memory limit set for your container:
+
+resources:
+  limits:
+    memory: "512Mi"
+If not specified, set it explicitly.
+
+2. Raise Memory Limit or Optimize Node Heap Settings
+
+Increase the memory allocation either in Kubernetes limits or via NODE_OPTIONS:
+
+Option 1: Raise container memory limit (recommended)
+
+resources:
+  limits:
+    memory: "1024Mi"  # Adjust as needed based on monitoring
+Option 2: Adjust Node.js memory usage
+
+Update the environment variable in your pod spec:
+
+env:
+- name: NODE_OPTIONS
+  value: "--max-old-space-size=768"
+
+3. Monitor Actual Memory Usage
+
+Use Metrics Server to validate how much memory your app uses in practice:
+
+kubectl top pod <your-pod-name>
+If usage consistently nears or exceeds limits, raise the memory cap.
+
+4. Add Readiness Probe Delay (Optional)
+
+If the container crashes during init, give it more time:
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 20
+  timeoutSeconds: 3
+
+5. Apply and Verify
+
+Redeploy the workload:
+
+kubectl apply -f deployment.yaml
+kubectl get pods -w
+Check if pod status stabilizes and monitor for further OOM events.
