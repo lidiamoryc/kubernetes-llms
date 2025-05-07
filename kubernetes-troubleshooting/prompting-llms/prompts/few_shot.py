@@ -1,23 +1,25 @@
+import json
+
 def get_few_shot_prompt_for_documentation(filtered_logs, critical_events, env, probe_note):
     return f"""You are a Kubernetes documentation assistant.
 
-Your job is to return **only relevant Kubernetes documentation excerpts** that help explain or contextualize the user's pod failure. Do **not** provide troubleshooting steps or YAML patches.
+            Your job is to return **only relevant Kubernetes documentation excerpts** that help explain or contextualize the user's pod failure. Do **not** provide troubleshooting steps or YAML patches.
 
-Each result must include:
-1. A short **title**
-2. A short **quoted or paraphrased excerpt** (1–3 lines)
-3. Optional: link to the relevant official doc
+            Each result must include:
+            1. A short **title**
+            2. A short **quoted or paraphrased excerpt** (1-3 lines)
+            3. Optional: link to the relevant official doc
 
----
+            ---
 
-**Example 1: Input**
-- Logs:
-2025-04-12T10:00:01 ERROR Failed to read config at /app/config.json
-2025-04-12T10:00:02 FATAL File does not exist
-- Events:
-Warning: FailedMount – configmap "web-app-config" not found
-- Env:
-{ "APP_ENV": "prod" }
+            **Example 1: Input**
+            - Logs:
+            2025-04-12T10:00:01 ERROR Failed to read config at /app/config.json
+            2025-04-12T10:00:02 FATAL File does not exist
+            - Events:
+            Warning: FailedMount - configmap "web-app-config" not found
+            - Env:
+             "APP_ENV": "prod" 
 
 **Example 1: Output**
 1. ConfigMap Volume Mounts  
@@ -38,7 +40,7 @@ Warning: FailedMount – configmap "web-app-config" not found
 - Events:
 Warning: Failed to resolve DB_HOST
 - Env:
-{ "DB_HOST": "10.0.0.5" }
+ "DB_HOST": "10.0.0.5" 
 
 **Example 2: Output**
 1. Service Discovery via DNS  

@@ -6,12 +6,12 @@ class SolutionMetrics:
     def __init__(self):
         pass
 
-    def extract_kubectl_commands(text):
+    def extract_kubectl_commands(self, text):
         """Extracts kubectl commands with all flags/parameters"""
         pattern = r"kubectl\s+[\w\-]+\s+[^\n]+(?=\n|$)"
         return [cmd.strip() for cmd in re.findall(pattern, text, re.IGNORECASE)]
 
-    def command_exactness(golden_text, generated_text):
+    def command_exactness(self, golden_text, generated_text):
         """Measures exact match of Kubernetes CLI commands"""
         golden_cmds = self.extract_kubectl_commands(golden_text)
         generated_cmds = self.extract_kubectl_commands(generated_text)
@@ -30,7 +30,7 @@ class SolutionMetrics:
     # --------------
 
 
-    def f1_over_words_technical(actual, golden):
+    def f1_over_words_technical(self, actual, golden):
         """F1 score focusing on technical terms, ignoring commands"""
         # Remove kubectl commands before comparison
         cleaned_actual = re.sub(r"kubectl\s+[\w\-]+\s+[^\n]+", "", actual)
@@ -55,7 +55,7 @@ class SolutionMetrics:
     # --------------
     # 3. Hallucination Detection (Kubernetes-aware)
     # --------------
-    def kubernetes_hallucination_detection(actual_steps, allowed_steps, threshold=0.6):
+    def kubernetes_hallucination_detection(self, actual_steps, allowed_steps, threshold=0.6):
         """Detects non-standard troubleshooting steps"""
         penalties = 0
         for step in actual_steps:

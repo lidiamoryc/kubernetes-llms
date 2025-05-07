@@ -12,46 +12,72 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from metrics.documentation_metrics import DocumentationMetrics
 
 
-# # iterating and building prompts for every example
+# iterating and building prompts for every example
 
-# current_dir = Path(__file__).resolve().parent
+current_dir = Path(__file__).resolve().parent
 
-# json_dir = current_dir.parent / "crash-cases" / "hardcoded-database"
+json_dir = current_dir.parent / "crash-cases" / "hardcoded-database"
+
+results_dir = current_dir / "results"
+results_dir.mkdir(exist_ok=True)
+
+# Helper to append to a JSON list
+def append_to_json(file_path, new_data):
+    if file_path.exists():
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        data = []
+
+    data.append(new_data)
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
 
 # for json_file in json_dir.glob("*.json"):
 
 #     prompt_builder = KubernetesPromptBuilder(json_file)
 
-#     prompt = prompt_builder.build_prompt_for_documentation()
+#     zero_shot_prompt = prompt_builder.build_prompt_for_documentation( mode="zero-shot")
+    
+#     one_shot_prompt = prompt_builder.build_prompt_for_documentation( mode="one-shot")
 
-#     print(prompt)
+#     few_shot_prompt = prompt_builder.build_prompt_for_documentation( mode="few-shot")
 
+#     openai_executor = LLMExecutor("gpt-3.5-turbo")
+#     output_z = openai_executor.run(zero_shot_prompt)
+#     append_to_json(results_dir / "zero_openai.json", output_z)
 
-## test
-current_dir = Path(__file__).resolve().parent
+#     output_o = openai_executor.run(one_shot_prompt)
+#     append_to_json(results_dir / "one_openai.json", output_o)
 
-json_dir = current_dir.parent / "crash-cases" / "hardcoded-database" / "CrashLoopBackOff.json"
-
-prompt_builder = KubernetesPromptBuilder(json_dir)
-
-prompt = prompt_builder.build_prompt_for_documentation()
-
-print(prompt)
-
-executor = LLMExecutor("llama")
-
-output = executor.run(prompt)
-
-print(output)
+#     output_f = openai_executor.run(few_shot_prompt)
+#     append_to_json(results_dir / "few_openai.json", output_f)
 
 
-answers_dir = current_dir.parent / "crash-cases" / "ground-truth-answers" / "ANS-CrashLoopBackOff.json"
+#     claude_executor = LLMExecutor("claude-3")
+#     output_z = claude_executor.run(zero_shot_prompt)
+#     append_to_json(results_dir / "zero_claude.json", output_z)
 
-with open(answers_dir, "r", encoding="utf-8") as f:
-    ground_truth = json.load(f)
+#     output_o = claude_executor.run(one_shot_prompt)
+#     append_to_json(results_dir / "one_claude.json", output_o)
 
 
-gt = ground_truth["documentation"]      
+#     output_f = claude_executor.run(few_shot_prompt)
+#     append_to_json(results_dir / "few_claude.json", output_f)
+
+
+#     llama_executor = LLMExecutor("llama")
+#     output_z = llama_executor.run(zero_shot_prompt)
+#     append_to_json(results_dir / "zero_llama.json", output_z)
+#     print(output_z)
+
+#     output_o = llama_executor.run(one_shot_prompt)
+#     append_to_json(results_dir / "one_llama.json", output_o)
+
+#     output_f = llama_executor.run(few_shot_prompt)
+#     append_to_json(results_dir / "few_llama.json", output_f)
+  
 
 
 def split_documentation_blocks(text: str) -> list:
@@ -63,122 +89,49 @@ def split_documentation_blocks(text: str) -> list:
     blocks = re.split(r'\n?\s*\d+\.\s+', text.strip())
     return [b.strip() for b in blocks if b.strip()]
 
-pred = split_documentation_blocks(output)
 
-print(gt)
-print(pred)
 
+answers_dir = current_dir.parent / "crash-cases" / "ground-truth-answers"
+
+
+
+llama_outputs_path = current_dir / "results" / "zero_llama.json"
 metrics = DocumentationMetrics()
 
+with open(llama_outputs_path, "r", encoding="utf-8") as f:
+    llama_outputs = json.load(f)
 
-# BERTScore (semantic match)
-bert_score = metrics.compute_bertscore(pred, gt)
-precision = metrics.precision_at_k(gt, pred)
-mrr = metrics.mean_reciprocal_rank(gt, pred)
+bert_scores_for_zero_shot_llama = []
+pk_for_zero_shot_llama = []
+mrr_for_zero_shot_llama = []
 
-print(bert_score, precision, mrr)
+# Iterate through  folders in parallel
+for idx, answer_file in enumerate(answers_dir.glob("*.json")):
+    with open(answer_file, "r", encoding="utf-8") as f:
+        ground_truth = json.load(f)
 
+    gt_docs = ground_truth["documentation"]         
+    llm_output = llama_outputs[idx]                 
 
+    pred = split_documentation_blocks(llm_output)
 
+    bert_score = metrics.compute_bertscore(pred, gt_docs)
+    precision = metrics.precision_at_k(gt_docs, pred)
+    mrr = metrics.mean_reciprocal_rank(gt_docs, pred)
 
+    print(bert_score, precision, mrr)
 
+    bert_scores_for_zero_shot_llama.append(bert_score)
+    pk_for_zero_shot_llama.append(precision)
+    mrr_for_zero_shot_llama.append(mrr)
 
+   
+def average(values):
+    return sum(values) / len(values) if values else 0.0
 
+avg_bert = average(bert_scores_for_zero_shot_llama)
+avg_pk = average(pk_for_zero_shot_llama)
+avg_mrr = average(mrr_for_zero_shot_llama)
 
+print(avg_bert, avg_pk, avg_mrr)
 
-
-
-
-
-# Precision@k and MRR require exact/ID-based matching, so consider simple string overlaps:
-# precision = metrics.precision_at_k_semantic(gt, pred)
-# mrr = metrics.mrr_semantic(gt, pred)
-
-
-# ground_truth = """
-
-# 1. Service Discovery & DNS
-# "Pods should reference Services by their DNS name (<service>.<namespace>.svc.cluster.local), not static IPs. IPs are ephemeral in Kubernetes clusters."
-
-# 2. CrashLoopBackOff Definition
-# "A pod enters CrashLoopBackOff state when its containers repeatedly crash. Check logs with kubectl logs --previous to identify the root cause."
-
-# 3. Readiness Probe Best Practices
-# *"For applications with slow startup:
-
-# Set initialDelaySeconds longer than maximum initialization time
-
-# timeoutSeconds should exceed expected request processing time"*
-
-# 4. Endpoint Verification
-# *"Validate service-to-pod mapping with:
-
-# kubectl get endpoints <service-name>  
-# Empty results indicate no healthy pods match service selectors."*
-
-# 5. DNS Resolution Troubleshooting
-# *"Debug DNS issues from within pods using:
-
-# kubectl exec -it <pod> -- nslookup <service>  
-# Failure indicates CoreDNS issues or missing service."*
-
-
-# """
-
-
-# _d_metrics = DocumentationMetrics()
-
-# print(_d_metrics.compute_bertscore(output, ground_truth))
-
-
-
-
-# answering the documentation extraction
-
-# json_dir = current_dir.parent / "crash-cases" / "hardcoded-database"
-
-# for json_file in json_dir.glob("*.json"):
-#     pass
-
-
-# for elements in folder:
-#     call zero shot on gpt
-#     append json for zero-openai.json
-
-#     call zero shot on claude
-#     append json for zero-claude.json
-
-#     call zero shot on llama
-#     append json for zero-llama.json
-
-#     call one shot on gpt 
-#     append json for one-openai.json
-
-#     call one shot for claude 
-#     append json for one-claude.json
-
-#     call one shot for llama
-#     append json for one-llama.json
-
-#     call few-shot for gpt
-#     append json for few-openai.json
-
-#     call few-shot for claude
-#     appen json for few-claude.json
-
-#     call few-shot for llama
-#     append json for few-llama.json
-
-
-# for json in /results
-#     for element in json and golden standard - calculate documentation metric1
-#     append scores to File
-#     caount average
-    
-#     for element in json and golden standard - calculate documentation metric2
-#     append scores to File
-#     caount average
-
-#     for element in json and golden standard - calculate documentation metric3
-#     append scores to File
-#     caount average
