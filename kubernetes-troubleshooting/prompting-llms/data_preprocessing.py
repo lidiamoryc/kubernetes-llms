@@ -28,15 +28,16 @@ class KubernetesPromptBuilder:
         ]
 
         self.critical_events = []
-        for event in self.data.get("events", []):
+        for event in self.data.get("events") or []:
             if any(k in event for k in ["Failed", "Back-off", "Warning"]):
                 parts = event.split(": ", 1)
                 self.critical_events.append(parts[1] if len(parts) > 1 else parts[0])
 
         self.probe_note = ""
-        if self.data.get("probe_config", {}).get("timeoutSeconds", 1) < 2:
+        probe_config = self.data.get("probe_config") or {}
+        if probe_config.get("timeoutSeconds", 1) < 2:
             self.probe_note = "Probe timeout might be too short for database dependencies"
-        
+
 
     def build_prompt_for_documentation(self, mode="zero-shot") -> str:
 
