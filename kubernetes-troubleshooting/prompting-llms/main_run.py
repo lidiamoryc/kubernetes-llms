@@ -34,3 +34,55 @@ executor = LLMExecutor("claude-3")
 output = executor.run(prompt)
 
 print(output)
+
+
+
+answering the documentation extraction
+
+json_dir = current_dir.parent / "crash-cases" / "hardcoded-database"
+
+for json_file in json_dir.glob("*.json"):
+    pass
+
+
+for elements in folder:
+    call zero shot on gpt
+    append json for zero-openai.json
+
+    call zero shot on claude
+    append json for zero-claude.json
+
+    call zero shot on llama
+    append json for zero-llama.json
+
+    call one shot on gpt 
+    append json for one-openai.json
+
+    call one shot for claude 
+    append json for one-claude.json
+
+    call one shot for llama
+    append json for one-llama.json
+
+    call few-shot for gpt
+    append json for few-openai.json
+
+    call few-shot for claude
+    appen json for few-claude.json
+
+    call few-shot for llama
+    append json for few-llama.json
+
+
+for json in /results
+    for element in json and golden standard - calculate documentation metric1
+    append scores to File
+    caount average
+    
+    for element in json and golden standard - calculate documentation metric2
+    append scores to File
+    caount average
+
+    for element in json and golden standard - calculate documentation metric3
+    append scores to File
+    caount average
