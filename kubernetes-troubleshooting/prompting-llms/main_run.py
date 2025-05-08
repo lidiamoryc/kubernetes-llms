@@ -34,25 +34,25 @@ def append_to_json(file_path, new_data):
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
 
-# for json_file in json_dir.glob("*.json"):
+for json_file in json_dir.glob("*.json"):
 
-#     prompt_builder = KubernetesPromptBuilder(json_file)
+    prompt_builder = KubernetesPromptBuilder(json_file)
 
-#     zero_shot_prompt = prompt_builder.build_prompt_for_documentation( mode="zero-shot")
+    zero_shot_prompt = prompt_builder.build_prompt_for_documentation( mode="zero-shot")
     
-#     one_shot_prompt = prompt_builder.build_prompt_for_documentation( mode="one-shot")
+    one_shot_prompt = prompt_builder.build_prompt_for_documentation( mode="one-shot")
 
-#     few_shot_prompt = prompt_builder.build_prompt_for_documentation( mode="few-shot")
+    few_shot_prompt = prompt_builder.build_prompt_for_documentation( mode="few-shot")
 
-#     openai_executor = LLMExecutor("gpt-3.5-turbo")
-#     output_z = openai_executor.run(zero_shot_prompt)
-#     append_to_json(results_dir / "zero_openai.json", output_z)
+    openai_executor = LLMExecutor("gpt-3.5-turbo")
+    output_z = openai_executor.run(zero_shot_prompt)
+    append_to_json(results_dir / "zero_openai.json", output_z)
 
-#     output_o = openai_executor.run(one_shot_prompt)
-#     append_to_json(results_dir / "one_openai.json", output_o)
+    output_o = openai_executor.run(one_shot_prompt)
+    append_to_json(results_dir / "one_openai.json", output_o)
 
-#     output_f = openai_executor.run(few_shot_prompt)
-#     append_to_json(results_dir / "few_openai.json", output_f)
+    output_f = openai_executor.run(few_shot_prompt)
+    append_to_json(results_dir / "few_openai.json", output_f)
 
 
 #     claude_executor = LLMExecutor("claude-3")
@@ -105,7 +105,7 @@ bert_scores_for_zero_shot_llama = []
 pk_for_zero_shot_llama = []
 mrr_for_zero_shot_llama = []
 
-# Iterate through  folders in parallel
+# Iterate through folders in parallel
 for idx, answer_file in enumerate(answers_dir.glob("*.json")):
     with open(answer_file, "r", encoding="utf-8") as f:
         ground_truth = json.load(f)

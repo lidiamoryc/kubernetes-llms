@@ -1,0 +1,86 @@
+{
+  "ImagePullBackOff": {
+    "baseline": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8628683288892111
+    },
+    "hyde": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8628683288892111
+    }
+  },
+  "ReadinessProbeFailed": {
+    "baseline": {
+      "precision@3": 0.6666666666666666,
+      "mrr": 1.0,
+      "bertscore": 0.8192653854688009
+    },
+    "hyde": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8309786717096964
+    }
+  },
+  "PodInitializing": {
+    "baseline": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8512171506881714
+    },
+    "hyde": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8573940594991049
+    }
+  },
+  "CreateContainerConfigError": {
+    "baseline": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.839013934135437
+    },
+    "hyde": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8449664115905762
+    }
+  },
+  "CrashLoopBackOff": {
+    "baseline": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8336300651232401
+    },
+    "hyde": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8413239518801371
+    }
+  },
+  "OOMKilled": {
+    "baseline": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8180475234985352
+    },
+    "hyde": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8384022116661072
+    }
+  },
+  "_average": {
+    "baseline": {
+      "precision@3": 0.9444444444444443,
+      "mrr": 1.0,
+      "bertscore": 0.8373403979672327
+    },
+    "hyde": {
+      "precision@3": 1.0,
+      "mrr": 1.0,
+      "bertscore": 0.8459889392058054
+    }
+  }
+}

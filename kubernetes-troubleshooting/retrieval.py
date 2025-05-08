@@ -3,13 +3,13 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 import json
 import os
-from Issues import config_map_query
+from Issues import config_map_query, database_issues
 
 with open("config.json", "r") as config_file:
     config = json.load(config_file)
 
-INDEX_PATH = config.get("faiss_index_path", "default_index_path/index.faiss")
-METADATA_PATH = config.get("metadata_path", "configmaps_chunks.txt")
+INDEX_PATH = config.get("faiss_index_path", "default_index_path/kubernetes_docs_chunks.txt.faiss")
+METADATA_PATH = config.get("metadata_path", "kubernetes_docs_chunks.txt.txt")
 
 
 # Wczytanie indeksu FAISS
@@ -63,8 +63,11 @@ def retrieve(query: str, k: int = 10):
 
 def enhance_query_with_hyde(query: str) -> str:
     from openai import OpenAI
+    from dotenv import load_dotenv
 
-    openai_api_key = config.get(os.getenv("OPEN_AI_API_KEY"))
+    load_dotenv()
+
+    openai_api_key = os.getenv("OPENAI_API_KEY")
     # openai_api_key = config.get("openai_api_key")
     if not openai_api_key:
         raise ValueError("OpenAI API key is missing in the config file.")
@@ -93,13 +96,11 @@ def retrieve_hyde(query: str, k: int = 5):
     return {"hyde_query": hyde_query, "results": results}
 
 
-# Funkcja zero-shot
 def retrieve_zero_shot(query: str, k: int = 5):
     zero_shot_query = f"[Zero-shot] {query}"
     return retrieve(zero_shot_query, k)
 
 
-# Funkcja few-shot
 def retrieve_few_shot(query: str, k: int = 5):
     few_shot_query = f"[Few-shot] Przykład: Konfiguracja nie została załadowana poprawnie. Kontekst: {query}"
     return retrieve(few_shot_query, k)
@@ -112,7 +113,7 @@ def retrieval_methods(case_name: str, query: str, output_dir="results", k: int =
         "baseline": retrieve(query, k),
         "hyde": hyde_result["results"],
         "hyde_query": hyde_result["hyde_query"],
-        "few_shot": retrieve_few_shot(query, k),
+        # "few_shot": retrieve_few_shot(query, k),
     }
 
     os.makedirs(output_dir, exist_ok=True)
@@ -129,6 +130,9 @@ if __name__ == "__main__":
     # Test 1 - ConfigMap problem
     retrieval_methods("ConfigMap_problem", config_map_query)
 
+    for issue_name, issue_data in database_issues.items():
+        query = issue_data["query"]
+        retrieval_methods(issue_name, query)
     # # Test 2 - Inny problem
     # query2 = "Błąd startupu serwisu w klastrze Kubernetes."
     # test_retrieval_methods("Kubernetes_startup_error", query2)

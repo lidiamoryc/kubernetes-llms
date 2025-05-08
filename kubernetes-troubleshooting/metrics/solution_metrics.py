@@ -2,6 +2,15 @@ from collections import Counter
 import re
 
 
+def _step_similarity(a, b, threshold):
+    """Fuzzy match using Jaccard similarity"""
+    a_tokens = set(a.lower().split())
+    b_tokens = set(b.lower().split())
+    intersection = len(a_tokens & b_tokens)
+    union = len(a_tokens | b_tokens)
+    return (intersection / union) >= threshold
+
+
 class SolutionMetrics:
     def __init__(self):
         pass
@@ -62,13 +71,5 @@ class SolutionMetrics:
             if not any(_step_similarity(step, allowed, threshold) for allowed in allowed_steps):
                 penalties += 1
         return max(0, 1 - (penalties / len(actual_steps))) if actual_steps else 1.0
-
-    def _step_similarity(a, b, threshold):
-        """Fuzzy match using Jaccard similarity"""
-        a_tokens = set(a.lower().split())
-        b_tokens = set(b.lower().split())
-        intersection = len(a_tokens & b_tokens)
-        union = len(a_tokens | b_tokens)
-        return (intersection / union) >= threshold
 
 

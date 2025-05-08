@@ -1,5 +1,6 @@
 {
-    "faiss_index_path": "/Users/damianotto/PycharmProjects/kubernetes-llms/kubernetes-troubleshooting/configmaps_faiss.index",
-    "metadata_path": "configmaps_chunks.txt",
+    "docs_dir": "docs",
+    "faiss_index_path": "/Users/damianotto/PycharmProjects/kubernetes-llms/kubernetes-troubleshooting/kubernetes_docs_faiss.index",
+    "metadata_path": "kubernetes_docs_chunks.txt",
     "results_output_dir": "kubernetes-troubleshooting/results"
 }
