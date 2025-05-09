@@ -1,0 +1,16 @@
+{
+    "documentation": [
+        "1. ConfigMap Mounting Requirements \n When mounting a ConfigMap key as a file using subPath, the key must exist in the ConfigMap's data field. If the key is missing or the ConfigMap doesn't exist, the mount fails with CreateContainerConfigError.",
+        "2. Error Cause Identification \n CreateContainerConfigError occurs when a Pod references a non-existent ConfigMap. Verify the ConfigMap exists in the same namespace as the Pod with kubectl get configmap <name>.",
+        "3. Proper Volume Configuration \n To mount a single ConfigMap key as a file without items, the entire ConfigMap is mounted as a directory, not individual files."
+    ],
+
+    "solution": ""
+}
+
+
+
+
+
+
+

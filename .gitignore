@@ -57,7 +57,7 @@ coverage.xml
 .ipynb_checkpoints
 
 # PyCharm
-.idea/
+/.idea/
 !.idea/codeStyles/
 !.idea/inspectionProfiles/
 
@@ -89,4 +89,5 @@ docker-compose.override.yml
 # Logs
 *.log
 logs/
+
 

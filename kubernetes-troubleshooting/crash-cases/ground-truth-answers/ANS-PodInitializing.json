@@ -1,0 +1,12 @@
+{
+    "documentation": [
+        "1. Pod Initialization and Init Containers \n Init containers run before app containers in a Pod are started. If an Init container fails, Kubernetes retries it until it succeeds or the Pod is deleted.",
+        "2. Service Discovery in Kubernetes \n Kubernetes uses DNS to allow Pods to discover Services. Each Service is assigned a DNS name, and Pods can use that name to communicate with the service.", 
+        "3. Endpoint Validation \n If a Pod cannot reach a service via DNS, ensure the service has endpoints: \n Kubectl get endpoints <service-name> \n Empty output means no matching Pods are available for the service selector",
+        "4. Init Container Troubleshooting\n Use kubectl describe pod and kubectl logs <pod> -c <init-container> to understand why an Init container is stuck or failing. Network or DNS issues are common causes.",
+        "5. Networking and Connectivity Testing \n You can use kubectl exec to test connectivity to a service. Use tools like nc or curl within the container."
+    ],
+
+    "solution": ""
+}
+

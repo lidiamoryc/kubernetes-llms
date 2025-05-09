@@ -1,0 +1,18 @@
+{
+    "documentation": [
+        "1. Service Discovery & DNS \n Pods should reference Services by their DNS name (<service>.<namespace>.svc.cluster.local), not static IPs. IPs are ephemeral in Kubernetes clusters.",
+        "2. CrashLoopBackOff Definition \n A pod enters CrashLoopBackOff state when its containers repeatedly crash. Check logs with kubectl logs --previous to identify the root cause.",
+        "3. Readiness Probe Best Practices \n For applications with slow startup: \n Set initialDelaySeconds longer than maximum initialization time \n timeoutSeconds should exceed expected request processing time",
+        "4. Endpoint Verification \n Validate service-to-pod mapping with: \n kubectl get endpoints <service-name>  \n Empty results indicate no healthy pods match service selectors.",
+        "5. DNS Resolution Troubleshooting \n Debug DNS issues from within pods using: \n kubectl exec -it <pod> -- nslookup <service> \n Failure indicates CoreDNS issues or missing service."
+    ],
+
+    "solution": ""
+}
+
+
+
+
+
+
+

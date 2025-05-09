@@ -1,0 +1,10 @@
+{
+    "documentation": [
+        "1. Readiness Probes and HTTP Status Codes \n A readiness probe checks if the application is ready to serve requests. If the probe returns a failure (e.g., 404), the container is marked as not ready and removed from the service's endpoints.",
+        "2. Proper Configuration of Readiness Probes \n The HTTP probe must return a status code between 200 and 399 to be considered successful. A 404 status code is treated as a failure.",
+        "3. Serving Readiness Probe Paths \n The application must expose an HTTP server and listen on the defined port and path. Ensure the endpoint (e.g., `/healthz`) exists and returns an acceptable status code."
+        ],
+
+    "solution": ""
+}
+

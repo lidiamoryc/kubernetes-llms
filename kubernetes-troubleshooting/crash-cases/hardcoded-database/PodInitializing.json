@@ -1,0 +1,13 @@
+{
+    "pod_status": "PodInitializing",
+    "logs": "Init:Waiting for service discovery...",
+    "events": [
+      "Init:0/1 PodInitializing",
+      "Warning: Init:Error connecting to redis:6379"
+    ],
+    "env": [
+      {"name": "REDIS_HOST", "value": "redis-service"}
+    ],
+    "probe_config": null
+  }
+  

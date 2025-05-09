@@ -6,3 +6,5 @@ faiss-cpu~=1.10.0
 sentence-transformers~=4.0.2
 openai~=1.72.0
 deepeval~=2.7.1
+anthropic
+bert_score

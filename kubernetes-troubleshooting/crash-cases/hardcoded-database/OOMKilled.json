@@ -1,0 +1,13 @@
+{
+    "pod_status": "OOMKilled",
+    "logs": "FATAL ERROR: JS heap out of memory",
+    "events": [
+      "Memory limit exceeded",
+      "Container exited with code 137"
+    ],
+    "env": [
+      {"name": "NODE_OPTIONS", "value": "--max-old-space-size=512"}
+    ],
+    "probe_config": {"timeoutSeconds": 2}
+  }
+  
