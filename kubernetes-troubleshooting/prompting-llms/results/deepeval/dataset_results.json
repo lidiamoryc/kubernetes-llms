@@ -1,7 +1,7 @@
 {
   "test_results": [
     {
-      "name": "test_case_5",
+      "name": "test_case_1",
       "success": true,
       "metrics_data": [
         {
@@ -9,7 +9,7 @@
           "threshold": 0.5,
           "success": true,
           "score": 1.0,
-          "reason": "Great job! The score is at its maximum of 1.00 because there are no irrelevant statements in the output.",
+          "reason": "The score is 1.00 because there are no irrelevant statements in the actual output, providing a highly relevant and accurate answer to the input.",
           "strict_mode": false,
           "evaluation_model": "gpt-3.5-turbo",
           "error": null
@@ -24,8 +24,24 @@
           "name": "Answer Relevancy",
           "threshold": 0.5,
           "success": true,
-          "score": 0.8,
-          "reason": "The score is 0.80 because while the response addresses the 'ImagePullBackOff' issue, there is one statement that focuses on the probe timeout, which is off-topic.",
+          "score": 1.0,
+          "reason": "The score is 1.00 because the answer directly addresses the Kubernetes problem: ImagePullBackOff with relevant information.",
+          "strict_mode": false,
+          "evaluation_model": "gpt-3.5-turbo",
+          "error": null
+        }
+      ]
+    },
+    {
+      "name": "test_case_0",
+      "success": true,
+      "metrics_data": [
+        {
+          "name": "Answer Relevancy",
+          "threshold": 0.5,
+          "success": true,
+          "score": 1.0,
+          "reason": "The score is 1.00 because the answer is completely relevant to addressing the input.",
           "strict_mode": false,
           "evaluation_model": "gpt-3.5-turbo",
           "error": null
@@ -40,8 +56,8 @@
           "name": "Answer Relevancy",
           "threshold": 0.5,
           "success": true,
-          "score": 1.0,
-          "reason": "Great job! The answer relevancy score is already at its highest because there are no irrelevant statements in the actual output.",
+          "score": 0.875,
+          "reason": "The score is 0.88 because the statement is about the root cause, not how to resolve the CrashLoopBackOff problem.",
           "strict_mode": false,
           "evaluation_model": "gpt-3.5-turbo",
           "error": null
@@ -57,7 +73,7 @@
           "threshold": 0.5,
           "success": true,
           "score": 1.0,
-          "reason": "The score is 1.00 because there are no irrelevant statements in the actual output, showing a perfect relevancy to the input.",
+          "reason": "The score is 1.00 because there were no irrelevant statements in the actual output, showing clear and accurate relevance.",
           "strict_mode": false,
           "evaluation_model": "gpt-3.5-turbo",
           "error": null
@@ -65,7 +81,7 @@
       ]
     },
     {
-      "name": "test_case_1",
+      "name": "test_case_5",
       "success": true,
       "metrics_data": [
         {
@@ -73,23 +89,7 @@
           "threshold": 0.5,
           "success": true,
           "score": 1.0,
-          "reason": "The score is 1.00 because there are no irrelevant statements in the actual output.",
-          "strict_mode": false,
-          "evaluation_model": "gpt-3.5-turbo",
-          "error": null
-        }
-      ]
-    },
-    {
-      "name": "test_case_0",
-      "success": true,
-      "metrics_data": [
-        {
-          "name": "Answer Relevancy",
-          "threshold": 0.5,
-          "success": true,
-          "score": 0.625,
-          "reason": "The score is 0.62 because while there are some irrelevant statements offering solutions in the actual output, the majority of the content addresses the Kubernetes problem of ReadinessProbeFailed sufficiently.",
+          "reason": "The score is 1.00 because the answer provided directly addresses the Kubernetes problem of OOMKilled without any irrelevant information.",
           "strict_mode": false,
           "evaluation_model": "gpt-3.5-turbo",
           "error": null

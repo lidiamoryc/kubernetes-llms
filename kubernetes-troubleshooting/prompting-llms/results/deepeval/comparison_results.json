@@ -2,30 +2,51 @@
   "individual_results": [
     {
       "case": "ReadinessProbeFailed",
-      "relevancy_score": 1.0
+      "relevancy_score": 1.0,
+      "command_exactness": 0.0,
+      "f1_technical": 0.36000000000000004,
+      "hallucination_score": 0
     },
     {
       "case": "CreateContainerConfigError",
-      "relevancy_score": 0.875
+      "relevancy_score": 1.0,
+      "command_exactness": 0.0,
+      "f1_technical": 0.4021739130434782,
+      "hallucination_score": 0
     },
     {
       "case": "PodInitializing",
-      "relevancy_score": 0.6666666666666666
+      "relevancy_score": 1.0,
+      "command_exactness": 0.0,
+      "f1_technical": 0.4,
+      "hallucination_score": 0
     },
     {
       "case": "CrashLoopBackOff",
-      "relevancy_score": 1.0
+      "relevancy_score": 0.8333333333333334,
+      "command_exactness": 0.16666666666666666,
+      "f1_technical": 0.5546666666666668,
+      "hallucination_score": 0.4285714285714286
     },
     {
       "case": "ImagePullBackOff",
-      "relevancy_score": 1.0
+      "relevancy_score": 1.0,
+      "command_exactness": 0.0,
+      "f1_technical": 0.3076923076923077,
+      "hallucination_score": 0
     },
     {
       "case": "OOMKilled",
-      "relevancy_score": 1.0
+      "relevancy_score": 1.0,
+      "command_exactness": 0.0,
+      "f1_technical": 0.36400000000000005,
+      "hallucination_score": 0
     }
   ],
   "average_metrics": {
-    "relevancy_score": 0.923611111111111
+    "relevancy_score": 0.9722222222222223,
+    "command_exactness": 0.027777777777777776,
+    "f1_technical": 0.3980888145670754,
+    "hallucination_score": 0.07142857142857144
   }
 }
