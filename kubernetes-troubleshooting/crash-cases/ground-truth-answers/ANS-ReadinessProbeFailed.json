@@ -5,6 +5,12 @@
         "3. Serving Readiness Probe Paths \n The application must expose an HTTP server and listen on the defined port and path. Ensure the endpoint (e.g., `/healthz`) exists and returns an acceptable status code."
         ],
 
-    "solution": ""
+    "solution": [
+        "1. Check Application Endpoint Availability\nMake sure your application serves the /healthz path:\n\ncurl http://localhost:8080/healthz\nIf it returns 404, the endpoint does not exist or is not correctly implemented.",
+        "2. Fix the Application or Update the Probe Path\n\nOption A: Modify the application to serve /healthz and return 200 OK\n\nOption B: Update the readiness probe to target an existing path, e.g. /ready\n\nreadinessProbe:\n  httpGet:\n    path: /ready\n    port: 8080\n  initialDelaySeconds: 3\n  periodSeconds: 5",
+        "3. Test Locally\nRun the container locally or within a temporary pod:\n\nkubectl run temp --image=myapp-image --port=8080 -it --rm -- bash\ncurl http://localhost:8080/healthz",
+        "4. Apply Updated Configuration\nAfter modifying the probe path or application:\n\nkubectl apply -f deployment.yaml\nkubectl rollout restart deployment/myapp-deployment",
+        "5. Verify Readiness Status\n\nkubectl get pods\nkubectl describe pod <pod-name>\nEnsure the pod is now marked as Ready and no Readiness probe failed events are shown."
+    ]
 }
 

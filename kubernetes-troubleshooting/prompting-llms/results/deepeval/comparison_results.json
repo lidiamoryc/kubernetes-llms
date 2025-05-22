@@ -1,0 +1,31 @@
+{
+  "individual_results": [
+    {
+      "case": "ReadinessProbeFailed",
+      "relevancy_score": 1.0
+    },
+    {
+      "case": "CreateContainerConfigError",
+      "relevancy_score": 0.875
+    },
+    {
+      "case": "PodInitializing",
+      "relevancy_score": 0.6666666666666666
+    },
+    {
+      "case": "CrashLoopBackOff",
+      "relevancy_score": 1.0
+    },
+    {
+      "case": "ImagePullBackOff",
+      "relevancy_score": 1.0
+    },
+    {
+      "case": "OOMKilled",
+      "relevancy_score": 1.0
+    }
+  ],
+  "average_metrics": {
+    "relevancy_score": 0.923611111111111
+  }
+}

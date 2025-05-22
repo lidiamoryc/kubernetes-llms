@@ -6,8 +6,15 @@
         "4. Endpoint Verification \n Validate service-to-pod mapping with: \n kubectl get endpoints <service-name>  \n Empty results indicate no healthy pods match service selectors.",
         "5. DNS Resolution Troubleshooting \n Debug DNS issues from within pods using: \n kubectl exec -it <pod> -- nslookup <service> \n Failure indicates CoreDNS issues or missing service."
     ],
-
-    "solution": ""
+    "solution": [
+        "1. Replace Static IP with Service DNS Name\n\n# Before\nenv: {\"DB_HOST\": \"10.0.0.5\"}\n\n# After\nenv:\n- name: DB_HOST\n  value: \"database-service.default.svc.cluster.local\"  # Service DNS format",
+        "2. Verify Database Service Exists\n\nkubectl get svc database-service -n default\n\nIf missing, create the service:\n\napiVersion: v1\nkind: Service\nmetadata:\n  name: database-service\n  namespace: default\nspec:\n  selector:\n    app: database  # Must match database pod labels\n  ports:\n    - protocol: TCP\n      port: 5432\n      targetPort: 5432",
+        "3. Check Service Endpoints\n\nkubectl get endpoints database-service -o wide\n\nExpected Output: ENDPOINTS 10.0.0.5:5432\n\nIf empty: Database pods aren't properly labeled or running",
+        "4. Test DNS Resolution\n\nkubectl exec web-pod -- nslookup database-service.default.svc.cluster.local\n\nSuccess: Returns database service IP\n\nFailure: Indicates CoreDNS issues or missing service",
+        "5. Validate Network Connectivity\n\nkubectl exec web-pod -- nc -zv database-service.default.svc.cluster.local 5432\n\nConnection refused: Verify database pod is running and listening on 5432\n\nTimeout: Check network policies and firewall rules",
+        "6. Adjust Readiness Probes\n\nreadinessProbe:\n  httpGet:\n    path: /health\n    port: 8080\n  initialDelaySeconds: 20  # Allow DB connection setup\n  timeoutSeconds: 3        # From 1 second\n  periodSeconds: 5",
+        "7. Verification\n\nkubectl rollout restart deployment/web-deployment\nkubectl get pods -w  # Watch for stable status"
+    ]
 }
 
 

@@ -5,7 +5,13 @@
         "3. Proper Volume Configuration \n To mount a single ConfigMap key as a file without items, the entire ConfigMap is mounted as a directory, not individual files."
     ],
 
-    "solution": ""
+    "solution": [
+        "1. Verify/Create the Missing ConfigMap\n\nkubectl get configmap/web-app-config -n <namespace>\n\nIf missing, create it\n\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: web-app-config\n  namespace: <your-namespace>\ndata:\n  config.json: |  # Key must match subPath\n    { \"your\": \"configuration\" }",
+        "2. Fix Volume Mount Configuration\n\n volumes:\n - name: config\n   configMap:\n     name: web-app-config\n+    items:\n+    - key: config.json  # Must match ConfigMap key\n+      path: config.json\n\n volumeMounts:\n - name: config\n-  mountPath: /app/config.json  #  File path\n+  mountPath: /app  #  Directory path\n   subPath: config.json",
+        "3. Resolve File Conflicts\n\nCheck for pre-existing files in container image:\nkubectl exec <pod> -- ls -la /app\n\nIf /app/config.json exists:\n# In Dockerfile\nRUN rm -f /app/config.json  # Remove conflicting file",
+        "4. Apply Changes\n\nkubectl apply -f updated-deployment.yaml\nkubectl delete pod <problem-pod>  # Force recreation",
+        "5. Verification:\n\nCheck pod status: kubectl get pods -w\n\nVerify mounted file: kubectl exec <new-pod> -- cat /app/config.json\n\nInspect events: kubectl describe pod <new-pod> | grep -A20 Events"
+    ]
 }
 
 

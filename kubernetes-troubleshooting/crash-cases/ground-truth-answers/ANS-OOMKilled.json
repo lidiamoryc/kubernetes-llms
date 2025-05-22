@@ -7,7 +7,13 @@
         "5. Monitoring Resource Usage with Metrics Server\n You can use the Kubernetes Metrics Server or other tools to inspect the actual memory usage of running containers before setting limits."
     ],
 
-    "solution": ""
+    "solution": [
+        "1. Analyze Current Memory Limits\n\nCheck the memory limit set for your container:\n\nresources:\n  limits:\n    memory: \"512Mi\"\nIf not specified, set it explicitly.",
+        "2. Raise Memory Limit or Optimize Node Heap Settings\n\nIncrease the memory allocation either in Kubernetes limits or via NODE_OPTIONS:\n\nOption 1: Raise container memory limit (recommended)\n\nresources:\n  limits:\n    memory: \"1024Mi\"  # Adjust as needed based on monitoring\nOption 2: Adjust Node.js memory usage\n\nUpdate the environment variable in your pod spec:\n\nenv:\n- name: NODE_OPTIONS\n  value: \"--max-old-space-size=768\"",
+        "3. Monitor Actual Memory Usage\n\nUse Metrics Server to validate how much memory your app uses in practice:\n\nkubectl top pod <your-pod-name>\nIf usage consistently nears or exceeds limits, raise the memory cap.",
+        "4. Add Readiness Probe Delay (Optional)\n\nIf the container crashes during init, give it more time:\n\nreadinessProbe:\n  httpGet:\n    path: /health\n    port: 8080\n  initialDelaySeconds: 20\n  timeoutSeconds: 3",
+        "5. Apply and Verify\n\nRedeploy the workload:\n\nkubectl apply -f deployment.yaml\nkubectl get pods -w\nCheck if pod status stabilizes and monitor for further OOM events."
+    ]
 }
 
 

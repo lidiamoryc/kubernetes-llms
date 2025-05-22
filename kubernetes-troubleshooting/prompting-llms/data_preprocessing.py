@@ -55,6 +55,17 @@ class KubernetesPromptBuilder:
         
         else:
             raise ValueError("Invalid mode. Choose 'zero-shot', 'one-shot', or 'few-shot'")
+                
+    def build_prompt_for_error_explanation(self, documentation_excerpts) -> str:
+        from prompts.zero_shot import get_zero_shot_prompt_for_error_explanation
+        
+        return get_zero_shot_prompt_for_error_explanation(
+            self.filtered_logs, 
+            self.filtered_logs, 
+            json.dumps(self.data.get('env', {})), 
+            self.probe_note,
+            documentation_excerpts
+        )
         
 
 

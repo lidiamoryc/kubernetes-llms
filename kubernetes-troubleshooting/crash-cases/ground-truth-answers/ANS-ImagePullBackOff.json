@@ -6,7 +6,13 @@
         "4. How imagePullPolicy Affects Image Pulling \n The imagePullPolicy for a container and the tag of the image affect when the kubelet attempts to pull (download) the specified image. \n If you would like to always force a pull, you can do one of the following: \n Set the imagePullPolicy of the container to Always. \n Omit the imagePullPolicy and use :latest as the tag for the image to use; Kubernetes will set the policy to Always when you submit the Pod. \n Omit the imagePullPolicy and the tag for the image to use; Kubernetes will set the policy to Always when you submit the Pod."
     ],
 
-    "solution": ""
+    "solution": [
+        "1. Verify Image Name and Tag\n\n# Confirm the image exists in the registry\ndocker pull my-registry/app:v1.3\n\nIf this fails:\n\nFix typos in the image name/tag in your deployment YAML\nEnsure the image is pushed to the registry",
+        "2. Configure imagePullSecrets for Private Registry\n\nCreate a Docker registry secret:\nkubectl create secret docker-registry regcred \\\n  --docker-server=my-registry \\\n  --docker-username=<your-username> \\\n  --docker-password=<your-password> \\\n  --docker-email=<your-email>\n\nUpdate your Pod/Deployment YAML:\nspec:\n  containers:\n  - name: app\n    image: my-registry/app:v1.3\n  imagePullSecrets:\n  - name: regcred  # Must match secret name",
+        "3. Validate Secret Configuration\n\n# Verify secret exists in the same namespace\nkubectl get secret regcred -o yaml\n\n# Check if pod references the secret\nkubectl describe pod <pod-name> | grep -A5 \"Image Pull Secrets\"",
+        "4. Force Image Pull (If Needed)\nspec:\n  containers:\n  - name: app\n    image: my-registry/app:v1.3\n    imagePullPolicy: Always  # Force fresh pull",
+        "5. Apply Changes and Verify\n\nkubectl delete pod <problem-pod>\nkubectl apply -f updated-deployment.yaml\nkubectl get pods -w  # Watch status transition"
+    ]
 }
 
 

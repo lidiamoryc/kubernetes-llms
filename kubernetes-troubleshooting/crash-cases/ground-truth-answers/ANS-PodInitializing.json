@@ -7,6 +7,15 @@
         "5. Networking and Connectivity Testing \n You can use kubectl exec to test connectivity to a service. Use tools like nc or curl within the container."
     ],
 
-    "solution": ""
+            "solution": [
+        "1. Check DNS Resolution Inside Pod\n\nkubectl exec -it <pod-name> -- nslookup redis-service\nIf this fails, there's a DNS misconfiguration or the Service does not exist.",
+        "2. Verify Redis Service Exists and Exposes Port\n\nkubectl get svc redis-service\nYou should see output with PORT(S): 6379/TCP.\n\nIf the service is missing, create it:\n\napiVersion: v1\nkind: Service\nmetadata:\n  name: redis-service\nspec:\n  selector:\n    app: redis\n  ports:\n    - protocol: TCP\n      port: 6379\n      targetPort: 6379\nApply it with:\n\nkubectl apply -f redis-service.yaml",
+        "3. Check Redis Pod Status\n\nkubectl get pods -l app=redis\nMake sure the Redis Pod is Running and Ready.\n\nIf not, debug Redis startup using:\n\nkubectl logs <redis-pod-name>",
+        "4. Validate Endpoints\n\nkubectl get endpoints redis-service\nOutput should contain IP addresses and ports like 10.0.0.5:6379.\n\nEmpty output means no Pods are matched by the service's selector. Fix labels in the Deployment or Service.",
+        "5. Inspect Init Container Logs\n\nkubectl logs <problem-pod> -c <init-container-name>\nFind the root cause — likely a connection timeout or DNS failure.",
+        "6. Test Connectivity to Redis\n\nkubectl exec -it <pod-name> -- nc -zv redis-service 6379\nSuccess: prints \"succeeded\" or \"open\"\n\nFailure: indicates Redis Pod is down, not listening, or there's a network policy blocking traffic.",
+        "7. Add Readiness Probe (Optional)\n\nIf Redis takes time to be ready, ensure the main container uses a readiness probe with retry logic:\n\nreadinessProbe:\n  tcpSocket:\n    port: 6379\n  initialDelaySeconds: 5\n  periodSeconds: 5\n  timeoutSeconds: 2",
+        "8. Restart Pod to Re-Initialize\n\nkubectl delete pod <problem-pod>\nIt will be recreated by the Deployment controller."
+            ]
 }
 
